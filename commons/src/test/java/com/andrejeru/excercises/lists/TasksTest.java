@@ -1,10 +1,9 @@
 package com.andrejeru.excercises.lists;
 
-import com.andrejeru.collections.SimpleArrayList;
 import com.andrejeru.collections.SimpleForwardLinkedList;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -67,19 +66,51 @@ public class TasksTest {
         firstNumb.add('3');
         secondNumb.add('5');
 
-        assertEquals(8, Tasks.sum(firstNumb, secondNumb));
+        assertEquals(SimpleForwardLinkedList.fromList(8), Tasks.sum(firstNumb, secondNumb));
 
         firstNumb.add('1');
-        secondNumb.add('9');
         firstNumb.add('5');
+        secondNumb.add('9');
         secondNumb.add('2');
 
-        assertEquals(808, Tasks.sum(firstNumb, secondNumb));
+        assertEquals(SimpleForwardLinkedList.fromList(8,0,8), Tasks.sum(firstNumb, secondNumb));
 
         secondNumb.add('1');
-        assertEquals(1808, Tasks.sum(firstNumb, secondNumb));
+        assertEquals(SimpleForwardLinkedList.fromList(1,8,0,8), Tasks.sum(firstNumb, secondNumb));
+    }
 
+    @Test
+    public void testFindLoopNode_withoutLoop() {
+        SimpleForwardLinkedList<Integer> withoutLoopTest = new SimpleForwardLinkedList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
 
+        assertNull(Tasks.findLoopNode(withoutLoopTest));
+    }
+
+    @Test
+    public void testFindLoopNode_withLoop() {
+        SimpleForwardLinkedList<Integer> withoutLoopTest = new SimpleForwardLinkedList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6));
+
+        SimpleForwardLinkedList.Node<Integer> loopNode = withoutLoopTest.get(5);
+        loopNode.setNext(withoutLoopTest.get(2));
+
+        assertEquals(withoutLoopTest.get(2).getContent(), Tasks.findLoopNode(withoutLoopTest));
+    }
+
+    @Test
+    public void testFindLoopNode_emptyList() {
+        SimpleForwardLinkedList<Integer> withoutLoopTest = new SimpleForwardLinkedList<>();
+
+        assertNull(Tasks.findLoopNode(withoutLoopTest));
+    }
+
+    @Test
+    public void testFindLoopNode_withLoopLastElement() {
+        SimpleForwardLinkedList<Integer> withoutLoopTest = new SimpleForwardLinkedList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6));
+
+        SimpleForwardLinkedList.Node<Integer> loopNode = withoutLoopTest.get(6);
+        loopNode.setNext(withoutLoopTest.get(0));
+
+        assertEquals(withoutLoopTest.get(0).getContent(), Tasks.findLoopNode(withoutLoopTest));
     }
 
 }

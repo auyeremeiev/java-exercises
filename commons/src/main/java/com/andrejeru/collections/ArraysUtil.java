@@ -23,13 +23,26 @@ public class ArraysUtil {
         return index;
     }
 
+    /**
+     * @return index of a first element in array
+     * */
+    public static <T> int indexOf(char[] array, char element) {
+        for(int i = 0; i < array.length; i++) {
+            if (array[i] == element) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
 
     /**
      * Dynamically puts element to the first empty cell in array. If array size is greater than threshold coefficient, expands array in 1.5 times.
      *
-     * @param array array to which add new element. Size can be modified if the occupancy exceeds the threshold.
+     * @param array array to which to add new element. Size can be modified if the occupancy exceeds the threshold.
      * @param element element to add to array.
-     * @param threshold if array exceeds this coefficient - expand array int 1.5 times.
+     * @param threshold if an array exceeds this coefficient - expand array in 1.5 times.
      *
      * @return index of new element in array
      * */
@@ -54,13 +67,10 @@ public class ArraysUtil {
      * @throws IllegalArgumentException when array is full and new element can't be added
      * */
     private static <T> int putInFirstEmptyCell(T[] array, T element) {
-        boolean arrayIsFull = true;
-
         for (int i = 0; i < array.length; i++) {
             // if first empty cell is found, put element in it and return it's index
             if (array[i] == null) {
                 array[i] = element;
-                arrayIsFull = false;
                 return i;
             }
         }
@@ -104,5 +114,13 @@ public class ArraysUtil {
      * */
     public static <T> void removeWithShift(T[] array, T element, double threshold) {
         // TODO
+    }
+
+    /**
+     * If data index exceeds the array boundaries, data can be lost
+     * */
+    public static <T> void shiftDataForward(T[] array, int fromIndex, int distance, int size) {
+
+        System.arraycopy(array, fromIndex, array, fromIndex + distance, size - fromIndex);
     }
 }

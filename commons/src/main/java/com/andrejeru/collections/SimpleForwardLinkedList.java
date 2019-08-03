@@ -1,11 +1,7 @@
 package com.andrejeru.collections;
 
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Spliterator;
-import java.util.function.Consumer;
+import java.util.*;
 
 /**
  * One directional linked list.
@@ -19,6 +15,29 @@ public class SimpleForwardLinkedList <T> implements Iterable<T>{
 
     public SimpleForwardLinkedList() {
         tail = head = null;
+    }
+
+    public SimpleForwardLinkedList(Collection<T> collection) {
+        Iterator<T> iterator = collection.iterator();
+
+        T element = iterator.next();
+        if(iterator.hasNext()) {
+            head = new Node<>(element);
+            size++;
+        }
+
+        Node<T> curNode = head;
+
+        while (iterator.hasNext()) {
+            element = iterator.next();
+            Node<T> newNode = new Node<>(element);
+
+            curNode.setNext(newNode);
+            curNode = newNode;
+            size++;
+        }
+
+        tail = curNode;
     }
 
     /**
@@ -87,7 +106,7 @@ public class SimpleForwardLinkedList <T> implements Iterable<T>{
             throw new IndexOutOfBoundsException("index : " + index + " out of bounds. List size : " + size);
 
         Node<T> currentNode = this.head;
-        for(int i = 0; i <= index; i++) {
+        for(int i = 0; i < index; i++) {
             currentNode = currentNode.next;
         }
 
@@ -199,7 +218,7 @@ public class SimpleForwardLinkedList <T> implements Iterable<T>{
         return false;
     }
 
-    public T nthFromLast(SimpleForwardLinkedList<T> list, int n) {
+    public T nthFromLast(int n) {
         if(n <= 0) {
             throw new IllegalArgumentException("n must be greater than 0");
         }
@@ -244,6 +263,41 @@ public class SimpleForwardLinkedList <T> implements Iterable<T>{
     @Override
     public Iterator<T> iterator() {
         return new ListIterator();
+    }
+
+    public List<T> toList() {
+        ArrayList<T> result = new ArrayList<>(size);
+
+        Iterator<T> iterator = iterator();
+        iterator.forEachRemaining(e -> result.add(e));
+
+        result.add(iterator.next());
+
+        return result;
+    }
+
+    @SafeVarargs
+    public static <T> SimpleForwardLinkedList fromList(T... elements) {
+        if(elements == null) {
+            return new SimpleForwardLinkedList<>();
+        }
+
+        return new SimpleForwardLinkedList(Arrays.asList(elements));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimpleForwardLinkedList<?> that = (SimpleForwardLinkedList<?>) o;
+        return size == that.size &&
+                Objects.equals(head, that.head) &&
+                Objects.equals(tail, that.tail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(head, tail, size);
     }
 
     /**
@@ -312,18 +366,31 @@ public class SimpleForwardLinkedList <T> implements Iterable<T>{
     private class ListIterator implements Iterator<T> {
         private Node<T> curElement = head;
 
+        /**
+         * Wrong implementation. Doesn't cover last element
+         *
+         * Mostly in all iterators there is size property and
+         * this method checks wether the current index exceeds this size value. Then it will
+         * cover all elements inside collection
+         * */
         @Override
         public boolean hasNext() {
+            if(head == null) {
+                return false;
+            }
+
             return curElement.hasNext();
         }
 
         @Override
         public T next() {
-            T content = curElement.content;
-            if(!hasNext())
-                throw new NoSuchElementException();
+            if(curElement == null) {
+                return null;
+            }
 
+            T content = curElement.content;
             curElement = curElement.next;
+//            curElement.next = curElement.next.next;
 
             return content;
         }

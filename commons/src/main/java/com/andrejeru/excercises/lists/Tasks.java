@@ -19,7 +19,7 @@ public class Tasks {
      * Implement an algorithm to find the nth to last element of a singly linked list.
      * */
     public static <E> E nthFromLast(SimpleForwardLinkedList<E> list, int n) {
-        return list.nthFromLast(list, n);
+        return list.nthFromLast(n);
     }
 
     /**
@@ -54,14 +54,14 @@ public class Tasks {
         boolean overflow = false;
         while (firstNumberIterator.hasNext()) {
             Character currentFirstNumberDigit = firstNumberIterator.next();
-            int sumResult = Integer.valueOf(currentFirstNumberDigit);
+            int sumResult = Character.getNumericValue(currentFirstNumberDigit);
 
             if(overflow) {
                 sumResult++;
             }
 
             if(secondNumberIterator.hasNext()) {
-                sumResult  += Integer.valueOf(secondNumberIterator.next());
+                sumResult  += Character.getNumericValue(secondNumberIterator.next());
             }
 
             result.add(Character.forDigit(sumResult % 10, 10));
@@ -82,5 +82,35 @@ public class Tasks {
        return result;
     }
 
+    /**
+     * Given a circular linked list, implement an algorithm which returns node at the beginning of the loop.
+     * DEFINITION
+     * Circular linked list: A (corrupt) linked list in which a node’s next pointer points to an
+     * earlier node, so as to make a loop in the linked list.
+     * EXAMPLE
+     * input: A -> B -> C -> D -> E -> C [the same C as earlier]
+     * output: C
+     * */
+    public static <T> T findLoopNode(SimpleForwardLinkedList<T> list) {
+        Iterator<T> iterator = list.iterator();
+        int index = 0;
+
+        while (iterator.hasNext()) {
+            T curElement = iterator.next();
+            Iterator<T> innerIterator = list.iterator();
+            int innerIndex = 0;
+            while (innerIndex < index) {
+                T nextAlreadyPastElement = innerIterator.next();
+                if(nextAlreadyPastElement == curElement) {
+                    return curElement;
+                }
+                innerIndex++;
+            }
+
+            index++;
+        }
+
+        return null;
+    }
 
 }

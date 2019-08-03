@@ -49,12 +49,21 @@ public class SimpleHashMap<K,V> implements Map<K, V> {
     @Override
     public boolean containsKey(Object o) {
         boolean result = false;
+        BinNode bin = findABin(o);
 
-        for(int i = 0; i < bins.length; i++)
-            if(findEntryByKey(bins[i], o) != null)
-                result = true;
+        if (findEntryByKey(bin, o) != null) {
+            result = true;
+        }
 
         return result;
+    }
+
+    private BinNode findABin(Object o) {
+        int hash = hash(o);
+
+        int index = size - 1 & hash;
+
+        return bins[index];
     }
 
 
@@ -121,9 +130,11 @@ public class SimpleHashMap<K,V> implements Map<K, V> {
      * 2) Make additional manipulation with hash. {@link #hash(int)}
      * 3) Get the index of a bin. {@link #hash(int)}
      * 4) Find the entry with the same key in a forward linked list with this index using {@link Object#equals(Object)} method.
-     * 5) If element is found, rewrite its value. If not, add it to the begin of the linked list.
+     * 5) If element is found, rewrite its value. If not, add it to the end of the linked list.
+     * 6) Increments internal size value. If size exceeds threshold (it means number of elements inside the whole table,
+     * not bins or elements in bins), rehash (originally resize()) method is called.
      *
-     * To notice: the new entry instance is created inside. For sake of speed it's hash modified by the {@link #hash(int)}
+     * To notice: the new entry instance is created inside. For the sake of speed its hash, modified by the {@link #hash(int)},
      * is set as an entry property {@link BinNode#hash(int)}. Key {@link BinNode#key} must be immutable,
      * because in case when somewhere key is modified, the hash in entry property {@link BinNode#hash(int) must be
      * also updated. When it doesn't happen, information can be broken.
@@ -140,6 +151,8 @@ public class SimpleHashMap<K,V> implements Map<K, V> {
      * @param v value of new element. Can be null
      *
      * @return value of new element
+     *
+     * @see #refresh()
      * */
     @Override
     public V put(K k, V v) {
@@ -198,7 +211,15 @@ public class SimpleHashMap<K,V> implements Map<K, V> {
         return hash & capacity - 1;
     }
 
-    public int hash(int hash) {
+    final public static int hash(Object o) {
+        if(o == null) {
+            return 0;
+        } else {
+            return hash(o.hashCode());
+        }
+    }
+
+    final public static int hash(int hash) {
         return hash ^ (hash >>> 16);
     }
 
@@ -218,11 +239,22 @@ public class SimpleHashMap<K,V> implements Map<K, V> {
     /**
      * Reconstructs hashmap. Extends hashmap and reallocates ellements between bins. Doubles it's size
      *
+     *
      * It's not like an original map. It simply reputs all elements. In the original hashmap:
      * power-of-two expansion are used , the elements from each bin must either stay at same index, or move
      * with a power of two offset in the new table.
      *
      * To notice: never shrinks hashmap. So calling remove and clean methods never calls rehashing
+     *
+     * In original hashmap mostly it just uses old threshold and old capacity and just multiply their values by 2.
+     * If there is no such values it will use default ones : 16 - for capacity and 16 * 0.75 for the threshold.
+     * Of course this values can be specified in constructor. By the capacity, number of bins is always meant to be power of 2.
+     * Just on the map creation it already sets the capacity which is the power of 2 to the the specified capacity
+     * in constructor and then multiplies it each time.
+     *
+     * Recreates all bins array and extends it length twice.
+     *
+     *
      * */
     private void rehash() {
         Map<K,V> oldMap = this;

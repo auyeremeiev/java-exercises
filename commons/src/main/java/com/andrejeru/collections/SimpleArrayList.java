@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class SimpleArrayList<E> extends ArrayList<E> {
 
     /**
-     * Costructs an empty list with specified initial capacity
+     * Constructs an empty list with specified initial capacity
      *
      * To notice: if initialCapacity is less then 0 - throws exception
      * */
@@ -33,7 +33,7 @@ public class SimpleArrayList<E> extends ArrayList<E> {
     /**
      * Trims the capacity of the array to the list's current size. Used for optimization.
      *
-     * To notice: (Important) Isn't called by the methods of ArraList. Must be called separtely.
+     * To notice: (Important) Isn't called by the methods of ArrayList. Must be called separately.
      * */
     @Override
     public void trimToSize() {
@@ -64,7 +64,7 @@ public class SimpleArrayList<E> extends ArrayList<E> {
     }
 
     /**
-     * To notice: if specified capacity is more than current inner array length call grow() method.
+     * To notice: if specified capacity is more than current inner array length, calls grow() method.
      * Increments modCount
     */
     private void ensureCapacityInternal(int minCapacity) {
@@ -76,7 +76,7 @@ public class SimpleArrayList<E> extends ArrayList<E> {
     }
 
     /**
-     * To notice: Expands array in 1.5 times but if minCapacity grater than oldCapacity * 1.5,
+     * To notice: Expands array in 1.5 times but if minCapacity greater than oldCapacity * 1.5,
      * than the array will be expended to size = minCapacity.
      *
      * So array will be expanded minimum in 1.5 times
@@ -156,6 +156,15 @@ public class SimpleArrayList<E> extends ArrayList<E> {
 
     /**
      * Appends the specified element to the end of this list.
+     *
+     * Has very interesting method inside:
+     *
+     * private add :
+     *
+     *    This helper method split out from add(E) to keep method
+     *   bytecode size under 35 (the -XX:MaxInlineSize default value),
+     *   which helps when add(E) is called in a C1-compiled loop.
+     *
      *
      * @param e element to be appended to this list
      */

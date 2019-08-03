@@ -57,7 +57,7 @@ public class Tasks {
     }
 
     /**
-     * Write code to reverse a C-Style String. (C-String means that “abcd” is represented as
+     * Write code to reverse a C-Style String. (C-String means that "abcd" is represented as
      * five characters, including the null character.)
      * */
     public static String reverseString(String str) {
@@ -111,7 +111,7 @@ public class Tasks {
     }
 
     /**
-     * Write a method to replace all spaces in a string with ‘%20’.
+     * Write a method to replace all spaces in a string with `%20`.
      *
      * Implementation commentary:
      * StringBuilder#append method can have 0(n) complexity, because it sometimes reallocate the whole array inside,
@@ -203,7 +203,7 @@ public class Tasks {
     /**
      * Assume you have a method isSubstring which checks if one word is a substring of
      * another. Given two strings, s1 and s2, write code to check if s2 is a rotation of s1 using
-     * only one call to isSubstring (i.e., “waterbottle” is a rotation of “erbottlewat”).
+     * only one call to isSubstring (i.e., "watterbottle" is a rotation of "erbottlewat").
      * */
     public static boolean isRotation(String str1, String str2) {
         str2 += str2;
