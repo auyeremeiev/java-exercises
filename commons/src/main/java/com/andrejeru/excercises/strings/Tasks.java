@@ -71,7 +71,7 @@ public class Tasks {
     }
 
     /**
-     * Design an algorithm and write code to remove the duplicate characters in a string
+     * Design an algorithm and write code to removeLast the duplicate characters in a string
      * without using an extra copy of the array.
      *
      * FOLLOW UP

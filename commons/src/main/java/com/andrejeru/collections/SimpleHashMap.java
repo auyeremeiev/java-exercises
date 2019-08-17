@@ -244,7 +244,7 @@ public class SimpleHashMap<K,V> implements Map<K, V> {
      * power-of-two expansion are used , the elements from each bin must either stay at same index, or move
      * with a power of two offset in the new table.
      *
-     * To notice: never shrinks hashmap. So calling remove and clean methods never calls rehashing
+     * To notice: never shrinks hashmap. So calling removeLast and clean methods never calls rehashing
      *
      * In original hashmap mostly it just uses old threshold and old capacity and just multiply their values by 2.
      * If there is no such values it will use default ones : 16 - for capacity and 16 * 0.75 for the threshold.
@@ -274,7 +274,7 @@ public class SimpleHashMap<K,V> implements Map<K, V> {
      * To notice: returns null, if no element with such key was found. Key can be null. In this case 0 will be assigned ti hash
      *
      * To notice 2: not calls rehash to shrink the map. It's expansive for memory to use this collection when you need
-     * to rapidly remove many elements.
+     * to rapidly removeLast many elements.
      *
      * @return values of an element, which was deleted
      * */

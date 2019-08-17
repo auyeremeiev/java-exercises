@@ -123,4 +123,11 @@ public class ArraysUtil {
 
         System.arraycopy(array, fromIndex, array, fromIndex + distance, size - fromIndex);
     }
+
+    public static <T> void swap(T[] array, int firstIndex, int lastIndex) {
+        T temp = array[firstIndex];
+
+        array[firstIndex] = array[lastIndex];
+        array[lastIndex] = temp;
+    }
 }

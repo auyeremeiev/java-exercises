@@ -150,4 +150,9 @@ public class TasksTest {
         rotated = "bottlewat";
         assertFalse(Tasks.isRotation(str, rotated));
     }
+
+    @Test
+    public void test() {
+
+    }
 }
